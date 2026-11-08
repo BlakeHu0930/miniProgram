@@ -1,0 +1,20 @@
+<view class="page pdf-page">
+  <block wx:if="{{stage === 'settings'}}">
+    <view class="eyebrow">IMAGES TO PDF</view><view class="headline">几张图片，一份文件。</view><view class="muted">按顺序排好，报名、交材料更省事。</view>
+    <button class="choose-photo" bindtap="choose" disabled="{{busy || choosing || items.length >= 9}}" loading="{{choosing}}"><view class="pick-symbol">＋</view><view>{{items.length ? '继续添加图片' : '选择图片'}}</view><view class="small muted">{{items.length}}／9 张 · 支持 JPG、PNG</view></button>
+    <view wx:if="{{items.length}}" class="section-title">页面顺序 <text class="small muted">每张图片一页</text></view>
+    <view wx:for="{{items}}" wx:key="id" class="image-row"><view class="page-number">{{index + 1}}</view><image class="thumbnail" src="{{item.path}}" mode="aspectFill" bindtap="previewImage" data-id="{{item.id}}"/><view class="image-details"><view class="small">{{item.width}} × {{item.height}} px</view><view class="tiny muted">{{item.sizeText}}</view><view class="order-actions"><button class="order-button" data-id="{{item.id}}" data-step="-1" bindtap="move" disabled="{{busy || choosing || index === 0}}" aria-label="第{{index + 1}}页上移">上移</button><button class="order-button" data-id="{{item.id}}" data-step="1" bindtap="move" disabled="{{busy || choosing || index === items.length - 1}}" aria-label="第{{index + 1}}页下移">下移</button><button class="order-button remove" data-id="{{item.id}}" bindtap="remove" disabled="{{busy || choosing}}">移除</button></view></view></view>
+    <view class="panel"><view class="section-label">页面尺寸</view><view class="page-modes"><button class="mode-button {{mode === 'a4' ? 'selected' : ''}}" data-mode="a4" bindtap="setMode" disabled="{{busy || choosing}}"><view>A4 纸张</view><view class="tiny muted">留白 · 完整显示</view></button><button class="mode-button {{mode === 'image' ? 'selected' : ''}}" data-mode="image" bindtap="setMode" disabled="{{busy || choosing}}"><view>跟随图片尺寸</view><view class="tiny muted">按图片比例铺满</view></button></view><view class="small muted">不裁剪、不拉伸。透明区域将转换为白底。</view></view>
+    <view class="panel"><view class="section-label">文件名称</view><view class="filename-row"><input value="{{filename}}" maxlength="60" placeholder="例如 报名材料" bindinput="nameInput" disabled="{{busy || choosing}}" aria-label="PDF文件名称"/><text class="muted">.pdf</text></view></view>
+    <view class="small muted export-note">为控制文件大小，图片会按长边不超过 2048 像素进行适度优化。生成的 PDF 不包含可搜索文字。</view>
+    <button class="primary spaced" bindtap="generate" disabled="{{busy || choosing || !items.length}}" loading="{{busy}}">{{busy ? progress : '生成 PDF'}}</button>
+  </block>
+  <block wx:else>
+    <view class="eyebrow">READY TO SHARE</view><view class="headline">一份 PDF，整理好了。</view><view class="muted">先预览，确认每一页都刚刚好。</view>
+    <view class="panel file-card"><image class="pdf-icon" src="/assets/image-pdf.svg" mode="aspectFit"/><view class="file-title">{{output.filename}}</view><view class="muted small">{{output.pages}} 页 · {{output.sizeText}}</view><view class="small muted spaced">{{output.modeText}}</view></view>
+    <button class="primary" bindtap="open" disabled="{{opening || sharing}}" loading="{{opening}}">预览 / 保存 PDF</button><button class="secondary spaced" bindtap="share" disabled="{{opening || sharing}}" loading="{{sharing}}">分享 PDF</button><button class="secondary spaced" bindtap="editAgain" disabled="{{opening || sharing}}">调整顺序或文件名</button>
+    <view class="small muted export-note">在预览右上角菜单中选择保存、转发或其他应用；可用操作以当前微信及系统为准。退出本工具会清理生成文件，请先导出。</view>
+  </block>
+  <view wx:if="{{notice}}" class="notice" aria-role="alert">{{notice}}</view><view class="footer">无需登录 · 本地生成 · 保留原图</view>
+</view>
+<canvas type="2d" id="compression-canvas" class="worker-canvas"/>

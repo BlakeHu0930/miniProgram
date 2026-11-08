@@ -1,0 +1,57 @@
+<view class="page resize-page">
+  <block wx:if="{{stage === 'settings'}}">
+    <view class="eyebrow">{{mode === 'photo' ? 'ID PHOTO SIZE' : 'IMAGE RESIZER'}}</view>
+    <view class="headline">{{mode === 'photo' ? '证件照，尺寸刚好。' : '大小，由你决定。'}}</view>
+    <view class="muted">{{mode === 'photo' ? '选好规格，调整构图，轻松保存。' : '改像素、选比例，保留你想要的画面。'}}</view>
+    <view class="mode-tabs">
+      <button class="tab {{mode === 'photo' ? 'active' : ''}}" data-mode="photo" bindtap="selectMode" disabled="{{busy || choosing}}">证件照</button>
+      <button class="tab {{mode === 'custom' ? 'active' : ''}}" data-mode="custom" bindtap="selectMode" disabled="{{busy || choosing}}">自定尺寸</button>
+      <button class="tab {{mode === 'ratio' ? 'active' : ''}}" data-mode="ratio" bindtap="selectMode" disabled="{{busy || choosing}}">常用比例</button>
+    </view>
+    <view wx:if="{{mode === 'photo'}}" class="panel presets-panel">
+      <view class="section-label">选择证件照规格</view>
+      <view class="preset-grid">
+        <button wx:for="{{photos}}" wx:key="key" class="preset {{preset === item.key ? 'selected' : ''}}" data-key="{{item.key}}" bindtap="selectPreset" disabled="{{busy || choosing}}">
+          <view class="preset-name">{{item.label}}</view><view class="preset-detail">{{item.mm}}</view><view class="preset-detail">{{item.width}} × {{item.height}} px</view>
+        </button>
+      </view>
+      <view class="small muted">像素按约 300 DPI 换算；毫米仅作打印尺寸参考。请以报名或办证要求为准。</view>
+    </view>
+    <view wx:if="{{mode === 'ratio'}}" class="panel">
+      <view class="section-label">选择画面比例</view>
+      <view class="ratio-grid"><button wx:for="{{ratios}}" wx:key="key" class="ratio {{ratioKey === item.key ? 'selected' : ''}}" data-key="{{item.key}}" bindtap="selectRatio" disabled="{{busy || choosing}}">{{item.label}}</button></view>
+    </view>
+    <button wx:if="{{!image}}" class="choose-photo" bindtap="choose" disabled="{{choosing || busy}}" loading="{{choosing}}"><view class="pick-symbol">＋</view><view>选择一张图片</view><view class="small muted">支持 JPG、PNG · 仅在本机处理</view></button>
+    <view wx:else class="panel preview-panel">
+      <view class="row"><text class="section-label">{{mode === 'custom' ? '尺寸预览' : '调整裁剪构图'}}</text><button class="text-button" bindtap="choose" disabled="{{busy || choosing}}" loading="{{choosing}}">更换图片</button></view>
+      <view class="crop-stage">
+        <view class="crop-window" style="width:{{frameW}}rpx;height:{{frameH}}rpx" catchtouchstart="touchStart" catchtouchmove="touchMove" catchtouchend="touchEnd" catchtouchcancel="touchEnd">
+          <image wx:if="{{mode === 'custom'}}" class="stretch-image" src="{{image.path}}" mode="scaleToFill"/>
+          <image wx:else class="crop-image" src="{{image.path}}" style="{{imageStyle}}" mode="scaleToFill"/>
+          <view wx:if="{{mode !== 'custom'}}" class="crop-grid"><view class="grid-v one"/><view class="grid-v two"/><view class="grid-h one"/><view class="grid-h two"/></view>
+        </view>
+      </view>
+      <view class="small muted source-info">原图 {{image.width}} × {{image.height}} px · {{image.sizeText}}</view>
+      <block wx:if="{{mode !== 'custom'}}">
+        <view class="row small"><text class="muted">拖动图片调整位置，双指或滑杆缩放</text><button class="text-button" bindtap="resetCrop" disabled="{{busy}}">重置</button></view>
+        <view class="zoom-row"><text class="small">缩放</text><slider min="100" max="400" step="1" value="{{zoom}}" activeColor="#176e54" backgroundColor="#d9e5dd" block-size="20" bindchanging="changeZoom" bindchange="changeZoom" disabled="{{busy}}"/><text class="small zoom-value">{{zoom}}%</text></view>
+      </block>
+    </view>
+    <view class="panel dimensions-panel">
+      <view class="row"><text class="section-label">输出尺寸</text><view wx:if="{{mode === 'custom'}}" class="lock-control"><text class="small">锁定比例</text><switch checked="{{locked}}" color="#176e54" bindchange="toggleLock" disabled="{{busy || choosing}}"/></view><text wx:else class="small muted">{{mode === 'photo' ? mm : '保持所选比例'}}</text></view>
+      <view class="dimension-fields"><view class="dimension-field"><text class="small muted">宽度 / px</text><input type="number" maxlength="5" value="{{width}}" placeholder="输入宽度" data-field="width" bindinput="inputSize" disabled="{{mode === 'photo' || busy || choosing}}" aria-label="输出宽度像素"/></view><text class="multiply">×</text><view class="dimension-field"><text class="small muted">高度 / px</text><input type="number" maxlength="5" value="{{height}}" placeholder="输入高度" data-field="height" bindinput="inputSize" disabled="{{mode === 'photo' || busy || choosing}}" aria-label="输出高度像素"/></view></view>
+      <view wx:if="{{mode === 'custom'}}" class="quick-scales"><button wx:for="{{scaleOptions}}" wx:key="*this" class="scale-button" data-percent="{{item}}" bindtap="quickScale" disabled="{{!image || busy || choosing}}">{{item}}%</button></view>
+      <view class="small muted">{{mode === 'custom' && !locked ? '已关闭比例锁定，宽高比例改变时画面会拉伸。' : '输出最长边 ≤4096 px，总像素 ≤800 万。'}}</view>
+    </view>
+    <view wx:if="{{mode === 'photo'}}" class="photo-note">本工具调整尺寸与裁剪构图，不提供换底色或人像合规检测。</view>
+    <button class="primary generate" bindtap="generate" loading="{{busy}}" disabled="{{!image || busy || choosing}}">{{busy ? '正在生成…' : mode === 'photo' ? '生成证件照' : '生成图片'}}</button>
+  </block>
+  <block wx:else>
+    <view class="eyebrow">READY TO SAVE</view><view class="headline">{{mode === 'photo' ? '新证件照，准备好了。' : '新尺寸，准备好了。'}}</view><view class="muted">预览确认后，再保存到相册。</view>
+    <view class="panel result-panel"><image class="result-image" src="{{output.path}}" mode="aspectFit" bindtap="preview"/><view class="result-dimensions">{{output.width}} × {{output.height}} px</view><view class="small muted">原图 {{image.width}} × {{image.height}} px → 输出 {{output.sizeText}}</view><view wx:if="{{mode === 'photo'}}" class="small muted spaced">{{mm}} · 300 DPI 尺寸参考</view></view>
+    <button class="primary" bindtap="save" loading="{{saving}}" disabled="{{saving || saved}}">{{saved ? '已保存到相册' : '保存到相册'}}</button><button class="secondary spaced" bindtap="preview">查看大图</button><button class="secondary spaced" bindtap="editAgain" disabled="{{saving}}">继续调整</button>
+  </block>
+  <view wx:if="{{notice}}" class="notice" aria-role="alert">{{notice}}</view>
+  <view class="footer">无需登录 · 本地处理 · 保留原图</view>
+</view>
+<canvas type="2d" id="compression-canvas" class="worker-canvas"/>

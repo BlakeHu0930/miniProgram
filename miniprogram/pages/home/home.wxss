@@ -1,0 +1,13 @@
+.home-page{--tool-surface:#fff;--tool-tint:#e7f2eb;--tool-border:#e0e9e2;padding:40rpx 32rpx calc(40rpx + env(safe-area-inset-bottom));max-width:960rpx;margin:0 auto}
+.home-title{font-size:44rpx;font-weight:600;line-height:1.4;letter-spacing:-1rpx;margin:12rpx 0}
+.home-subtitle{color:#647a6e;font-size:26rpx}
+.tools-heading{font-size:28rpx;font-weight:600;margin:40rpx 0 20rpx}
+.tools-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20rpx}
+.home-page .tools-grid .tool-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16rpx;width:100%;max-width:100%;margin:0;min-width:0;min-height:192rpx;padding:24rpx 6rpx;background:var(--tool-surface);border:1rpx solid var(--tool-border);border-radius:24rpx;color:#183c33;line-height:1.4;text-align:center}
+.home-page .tools-grid .tool-tile-primary{background:var(--tool-tint);border-color:#bed8c7}
+.tool-icon-wrap{width:72rpx;height:72rpx;border-radius:20rpx;background:var(--tool-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tool-tile-primary .tool-icon-wrap{background:#d5e9dc}
+.tool-icon{display:block;width:56rpx;height:56rpx}
+.tool-name{display:block;font-size:24rpx;font-weight:500;max-width:100%;overflow-wrap:break-word}
+.home-page .tools-grid .tool-tile-pressed{background:#dcece2;border-color:#91b7a0}
+.home-page .footer{margin-top:32rpx}

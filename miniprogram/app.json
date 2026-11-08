@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/compress/compress",
+    "pages/resize/resize",
+    "pages/pdf/pdf"
+  ],
+  "window": {
+    "navigationBarTitleText": "省点事",
+    "navigationBarBackgroundColor": "#F5F8F5",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F5F8F5"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "__usePrivacyCheck__": true
+}

@@ -1,0 +1,25 @@
+<view class="page home-page">
+  <view class="eyebrow">省点事 / 每天轻松一点</view>
+  <view class="home-title">小工具，省点事。</view>
+  <view class="home-subtitle">图片、文档，顺手处理。</view>
+  <view class="tools-heading">全部工具</view>
+  <view class="tools-grid">
+    <button size="mini" class="tool-tile tool-tile-primary" hover-class="tool-tile-pressed" bindtap="openCompressor">
+      <view class="tool-icon-wrap"><image class="tool-icon" src="/assets/image-compress.svg" mode="aspectFit" aria-hidden="true"/></view>
+      <text class="tool-name">图片压缩</text>
+    </button>
+    <button size="mini" class="tool-tile" hover-class="tool-tile-pressed" bindtap="openPhoto">
+      <view class="tool-icon-wrap"><image class="tool-icon" src="/assets/id-photo.svg" mode="aspectFit" aria-hidden="true"/></view>
+      <text class="tool-name">证件照尺寸</text>
+    </button>
+    <button size="mini" class="tool-tile" hover-class="tool-tile-pressed" bindtap="openResize">
+      <view class="tool-icon-wrap"><image class="tool-icon" src="/assets/image-resize.svg" mode="aspectFit" aria-hidden="true"/></view>
+      <text class="tool-name">调整图片大小</text>
+    </button>
+    <button size="mini" class="tool-tile" hover-class="tool-tile-pressed" bindtap="openPdf">
+      <view class="tool-icon-wrap"><image class="tool-icon" src="/assets/image-pdf.svg" mode="aspectFit" aria-hidden="true"/></view>
+      <text class="tool-name">图片转 PDF</text>
+    </button>
+  </view>
+  <view class="footer">无需登录 · 图片仅在本机处理</view>
+</view>
